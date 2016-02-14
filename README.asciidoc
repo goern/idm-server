@@ -1,0 +1,62 @@
+Identity Management Services
+============================
+Christoph Görn <goern@redhat.com>
+0.1.0, 2016-Jan-12
+
+== Scope of this Document
+
+The ansible module provided may lack features needed in other environments.
+
+It will describe the IdM Service itself, as well as the configuration and
+deployment of the service components.
+
+== IdM Services
+
+The IdM Service provides
+
+ * a hierarchical Directory accessible via LDAPS
+ * User management, incl. keys or certificates
+ * Group management
+ * single sign on for Windows and RHEL hosts
+   - integration between Windows ActiveDirectory and RHEL IdM
+   - username/password, ssh key, and kerberos based authentication
+ * host and host identity (and groups of hosts) management
+ * roles and policy management for MS Windows and RHEL platform
+
+== Integration Scenarios
+
+=== ID1: OpenShift Web Console
+
+As a user with an account in the Linux Domain
+I want to access the OpenShift Origin web console.
+
+As an IT-Ops-Plt-Ops or IT-Mgmt-IT-Ops
+I want to log on to Fedora Atomic Hosts,
+so that I get authenticated by my username/password, ssh identity or kerberos ticket.
+
+=== Ansible Inventory
+
+To configure all solution components a Ansible module is provided. This may be
+used with a corresponding inventory file to configure
+
+ * the Fedora IdM components
+
+[source]
+------
+include::../inventory.yml[]
+------
+
+=== Ansible Playbook
+
+==== Prerequisites
+
+Ansible will connect via ssh to each host it needs to configure. This connection
+will be made as user `vagrant`. You will need to provide the ssh private key
+to ansible in order to log in to and of the IdM server hosts.
+
+==== Executing the Playbook
+
+After providing the inventory and required configuration you can execute the
+playbook by running `ansible-playbook --user=vagrant --private-key=../.vagrant/machines/idm-1/libvirt/private_key --become-user=root --inventory ../inventory.ini site.yml site.yml roles/idm-server/tasks/add_std_roles.yml --tags "init_with_acme"`.
+The IdM server will be initialized with a standard ACME Corp set of roles (implemented as groups).
+If these groups already exists, the creation errors will be ignored.

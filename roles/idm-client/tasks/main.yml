@@ -1,0 +1,6 @@
+---
+- name: Install IdM client packages
+  action: "{{ ansible_pkg_mgr }} name=ipa-client state=present"
+
+- name: Configure IdM
+  command: ipa-client-install -U --ssh-trust-dns --mkhomedir --force-ntpd --domain={{ idm_domain }} --realm={{ idm_realm }}  --server={{ idm_server }} -w {{ otp_password }}

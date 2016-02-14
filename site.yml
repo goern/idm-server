@@ -1,0 +1,29 @@
+---
+- hosts: idm-servers
+  vars:
+    idm_server_firewall_allow:
+    - service: https
+      port: 443/tcp
+    - service: httpd
+      port: 80/tcp
+    - service: ldap
+      port: 389/tcp
+    - service: ldaps
+      port: 636/tcp
+    - service: kerberos
+      port: 88/tcp
+    - service: kerberos
+      port: 88/udp
+    - servcice: kpasswd
+      port: 464/tcp
+    - servcice: kpasswd
+      port: 464/udp
+    - servcice: domain
+      port: 53/tcp
+    - servcice: domain
+      port: 53/udp
+    idm_domain: goern.example.com 
+    idm_realm: GOERN.EXAMPLE.COM 
+  roles:
+    - common
+    - idm-server

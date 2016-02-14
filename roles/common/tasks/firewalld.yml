@@ -1,0 +1,80 @@
+---
+# have a look at https://raw.githubusercontent.com/openshift/openshift-ansible/master/roles/os_firewall/tasks/firewall/firewalld.yml
+- name: Install firewalld packages
+  action: "{{ ansible_pkg_mgr }} name=firewalld state=present"
+  register: install_result
+  tags:
+    - firewall
+
+- name: Check if iptables-services is installed
+  command: rpm -q iptables-services
+  register: pkg_check
+  failed_when: pkg_check.rc > 1
+  changed_when: no
+  tags:
+    - firewall
+
+- name: Ensure iptables services are not enabled
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items:
+  - iptables
+  - ip6tables
+  when: pkg_check.rc == 0
+  tags:
+    - firewall
+
+- name: Reload systemd units
+  command: systemctl daemon-reload
+  when: install_result | changed
+  tags:
+    - firewall
+
+- name: Start and enable firewalld service
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+  register: result
+  tags:
+    - firewall
+
+- name: need to pause here, otherwise the firewalld service starting can sometimes cause ssh to fail
+  pause: seconds=10
+  when: result | changed
+  tags:
+    - firewall
+
+- name: Mask iptables services
+  command: systemctl mask "{{ item }}"
+  register: result
+  changed_when: "'iptables' in result.stdout"
+  with_items:
+  - iptables
+  - ip6tables
+  when: pkg_check.rc == 0
+  ignore_errors: yes
+  tags:
+    - firewall
+
+- name: Add firewalld allow rules
+  firewalld:
+    port: "{{ item.port }}"
+    permanent: false
+    state: enabled
+  with_items: idm_server_firewall_allow
+  when: idm_server_firewall_allow is defined
+  tags:
+    - firewall
+
+- name: Persist firewalld allow rules
+  firewalld:
+    port: "{{ item.port }}"
+    permanent: true
+    state: enabled
+  with_items: idm_server_firewall_allow
+  when: idm_server_firewall_allow is defined
+  tags:
+    - firewall

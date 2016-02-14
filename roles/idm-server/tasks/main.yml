@@ -1,0 +1,15 @@
+---
+- name: disable all repositories
+  command: subscription-manager repos --disable=\*
+
+- name: enable repos we need for IdM
+  command: subscription-manager repos --enable=rhel-7-server-optional-rpms --enable=rhel-7-server-rhn-tools-rpms --enable=rhel-7-server-rpms --enable=rhel-7-server-satellite-tools-6.1-rpms
+
+- name: Install IdM packages
+  action: "{{ ansible_pkg_mgr }} name=ipa-server state=present"
+
+- name: Configure IdM
+  command: ipa-server-install -U --hostname={{ inventory_hostname }} --domain={{ idm_domain }} --realm={{ idm_realm }} --no-ntp -a {{ idm_admin_password }} -p {{ idm_password }} --mkhomedir creates=/etc/ipa/default.conf
+
+- include: add_std_roles.yml
+- include: add_std_users.yml

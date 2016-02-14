@@ -1,0 +1,8 @@
+---
+- name: Add standard ACME Corp users to IdM
+  command: 'ipa user-add {{ item.user }} --sshpubkey="{{ item.ssh_key_pub }}" --first="{{ item.first_name }}" --last="{{ item.last_name }}"'
+  ignore_errors: yes
+  with_items:
+    - { user: 'ose3-installer', ssh_key_pub: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMua1OQCJth+NDNiAPobC01sSBPShVBzLeWXfYcIxg/u ose3@it.acme.example.com', first_name: 'OpenShift Enterprise 3', last_name: 'Installer' }
+  tags:
+    - init_with_acme

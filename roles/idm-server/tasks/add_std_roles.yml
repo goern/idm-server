@@ -1,0 +1,22 @@
+---
+- name: Add standard ACME Corp roles to IdM
+  command: 'ipa group-add {{ item.role }} --desc="{{ item.desc }}"'
+  ignore_errors: yes
+  with_items:
+    - { role: 'BUS-App-Own', desc: 'Application Owner, owns the application that supports business' }
+    - { role: 'BUS-Req-Eng', desc: 'Requirements Engineer, gather and formalize requirements of other parts of ACME to be handed over to IT-Dev' }
+    - { role: 'IT-Prod-Own', desc: 'Product Owner, owns the IT Product that implements Business Requirements' }
+    - { role: 'IT-Dev-Dev', desc: 'A software developer, responsible for delivering software.' }
+    - { role: 'IT-Dev-Ops-Eng', desc: 'A development engineer, able to add images to the platform' }
+    - { role: 'IT-Dev-QA-Eng', desc: 'Engineer performing QA tasks, deliver QA test results and reports' }
+    - { role: 'IT-Ops-App-Ops', desc: 'Application Operator, overall responsibility to operate an application' }
+    - { role: 'IT-Ops-Plt-Ops', desc: 'Platform Operator, operates the Application Platform infrastructure, including storage provisioning, but not the SOE' }
+    - { role: 'IT-Ops-Plt-Mgr', desc: 'Operations Manager, a read-only role primarily for reporting' }
+    - { role: 'IT-Mgmt-Sat-Adm', desc: 'Satellite Administrator, top-level admin role with unlimited access control to all Satellite' }
+    - { role: 'IT-Mgmt-Lic-Adm', desc: 'License Management Administrator, taking care of license and subscription management to satisfy various compliance requirements' }
+    - { role: 'IT-Mgmt-OS-Adm', desc: 'Operating System Administrator, maintain service of an operating system instance, physical or virtual' }
+    - { role: 'IT-Mgmt-Sys-Eng', desc: 'Core Build Systems Engineer, defines the core build (operating system)' }
+    - { role: 'IT-Mgmt-IT-Ops', desc: 'Infrastructure Operator, maintain server for Network, Storage, Compute resource' }
+    - { role: 'IT-Sec-Sec-Eng', desc: 'Security Engineer, ensures security aspects on all levels' }
+  tags:
+    - init_with_acme

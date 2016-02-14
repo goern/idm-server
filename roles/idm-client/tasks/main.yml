@@ -1,6 +1,8 @@
 ---
-- name: Install IdM client packages
+- name: Server: install IdM client packages
   action: "{{ ansible_pkg_mgr }} name=ipa-client state=present"
+  when: not is_atomic
 
-- name: Configure IdM
+- name: Server: configure IdM
   command: ipa-client-install -U --ssh-trust-dns --mkhomedir --force-ntpd --domain={{ idm_domain }} --realm={{ idm_realm }}  --server={{ idm_server }} -w {{ otp_password }}
+  when: not is_atomic

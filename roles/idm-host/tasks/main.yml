@@ -1,0 +1,4 @@
+---
+- name: add host to IdM service
+  shell: (printf 'foobarfoo\nfoobarfoo\nfoobarfoo\n' | kinit admin@GOERN.EXAMPLE.COM) && ipa host-add --force --ip-address={{ ansible_default_ipv4['address'] }} {{ inventory_hostname }} --password=happyjaja
+  delegate_to: idm-1.goern.example.com

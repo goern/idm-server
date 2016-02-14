@@ -3,12 +3,14 @@
 - name: Install firewalld packages
   action: "{{ ansible_pkg_mgr }} name=firewalld state=present"
   register: install_result
+  when: not is_atomic
   tags:
     - firewall
 
 - name: Check if iptables-services is installed
   command: rpm -q iptables-services
   register: pkg_check
+  when: not is_atomic
   failed_when: pkg_check.rc > 1
   changed_when: no
   tags:
@@ -23,6 +25,7 @@
   - iptables
   - ip6tables
   when: pkg_check.rc == 0
+  when: not is_atomic
   tags:
     - firewall
 
@@ -38,6 +41,7 @@
     state: started
     enabled: yes
   register: result
+  when: not is_atomic
   tags:
     - firewall
 
@@ -55,6 +59,7 @@
   - iptables
   - ip6tables
   when: pkg_check.rc == 0
+  when: not is_atomic
   ignore_errors: yes
   tags:
     - firewall

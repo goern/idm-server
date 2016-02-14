@@ -57,6 +57,6 @@ to ansible in order to log in to and of the IdM server hosts.
 ==== Executing the Playbook
 
 After providing the inventory and required configuration you can execute the
-playbook by running `ansible-playbook --user=vagrant --private-key=../.vagrant/machines/idm-1/libvirt/private_key --become-user=root --inventory ../inventory.ini site.yml site.yml roles/idm-server/tasks/add_std_roles.yml --tags "init_with_acme"`.
+playbook by running `ansible-playbook --user=vagrant --private-key=vagrant_ssh_key --become-user=root --inventory ../inventory.yml site.yml site.yml roles/idm-server/tasks/add_std_roles.yml --tags "init_with_acme"`.
 The IdM server will be initialized with a standard ACME Corp set of roles (implemented as groups).
 If these groups already exists, the creation errors will be ignored.

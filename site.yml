@@ -22,8 +22,13 @@
       port: 53/tcp
     - servcice: domain
       port: 53/udp
-    idm_domain: goern.example.com 
-    idm_realm: GOERN.EXAMPLE.COM 
+    idm_domain: goern.example.com
+    idm_realm: GOERN.EXAMPLE.COM
   roles:
     - common
     - idm-server
+
+- hosts: atomic-hosts
+  roles:
+    - common
+    - idm-host

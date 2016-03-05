@@ -1,9 +1,11 @@
 ---
 - name: disable all repositories
   command: subscription-manager repos --disable=\*
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: enable repos we need for IdM
   command: subscription-manager repos --enable=rhel-7-server-optional-rpms --enable=rhel-7-server-rhn-tools-rpms --enable=rhel-7-server-rpms --enable=rhel-7-server-satellite-tools-6.1-rpms
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Install IdM packages
   action: "{{ ansible_pkg_mgr }} name=ipa-server state=present"
